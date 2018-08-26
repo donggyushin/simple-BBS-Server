@@ -2,6 +2,14 @@ import express from "express";
 import mysql from "../db/mysql";
 const router = express.Router();
 
+router.get("/token", (req, res) => {
+  const user = req.session.token;
+
+  return res.json({
+    userId: user
+  });
+});
+
 router.get("/logout", (req, res) => {
   delete req.session.token;
   return res.json({
@@ -14,7 +22,7 @@ router.get("/logout", (req, res) => {
 router.post("/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  let sql = "SELECT password FROM user WHERE username = ?";
+  let sql = "SELECT id,password FROM user WHERE username = ?";
   const post = [username];
   mysql.query(sql, post, (err, results, fields) => {
     if (err) {
@@ -26,8 +34,9 @@ router.post("/login", (req, res) => {
       });
     } else {
       const user_password = results[0].password;
+      const user_id = results[0].id;
       if (password === user_password) {
-        req.session.token = username;
+        req.session.token = user_id;
         return res.json({
           ok: true,
           error: null,
