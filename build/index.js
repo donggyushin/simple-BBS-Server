@@ -29,9 +29,10 @@ var app = (0, _express2.default)();
 var sessionStore = new MySQLStore(_storeOptions2.default);
 
 var port = 8080;
-
+//app.use(bodyParser());
+app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
-app.use(_bodyParser2.default.json({ type: "application/*+json" }));
+
 app.use((0, _expressSession2.default)({
   key: "sadkljsdaklj!",
   secret: "askldjaslkdj@",
@@ -40,6 +41,8 @@ app.use((0, _expressSession2.default)({
   saveUninitialized: false
 }));
 app.use("/api", _api2.default);
+//SERVE STATIC FILES = REACT PROJECT
+app.use("/", _express2.default.static(__dirname + "/../../client/build"));
 
 app.get("/test", function (req, res) {
   var session = req.session.test;

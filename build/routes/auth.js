@@ -12,9 +12,22 @@ var _mysql = require("../db/mysql");
 
 var _mysql2 = _interopRequireDefault(_mysql);
 
+var _multer = require("multer");
+
+var _multer2 = _interopRequireDefault(_multer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var upload = (0, _multer2.default)();
 var router = _express2.default.Router();
+
+router.get("/token", function (req, res) {
+  var user = req.session.token;
+
+  return res.json({
+    userId: user
+  });
+});
 
 router.get("/logout", function (req, res) {
   delete req.session.token;
@@ -25,10 +38,12 @@ router.get("/logout", function (req, res) {
   });
 });
 
-router.post("/login", function (req, res) {
+router.post("/login", upload.array(), function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
-  var sql = "SELECT password FROM user WHERE username = ?";
+  console.log(req.body.username);
+  console.log(req.body.password);
+  var sql = "SELECT id,password FROM user WHERE username = ?";
   var post = [username];
   _mysql2.default.query(sql, post, function (err, results, fields) {
     if (err) {
@@ -40,8 +55,9 @@ router.post("/login", function (req, res) {
       });
     } else {
       var user_password = results[0].password;
+      var user_id = results[0].id;
       if (password === user_password) {
-        req.session.token = username;
+        req.session.token = user_id;
         return res.json({
           ok: true,
           error: null,

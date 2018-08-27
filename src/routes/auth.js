@@ -1,5 +1,7 @@
 import express from "express";
 import mysql from "../db/mysql";
+import multer from "multer";
+const upload = multer();
 const router = express.Router();
 
 router.get("/token", (req, res) => {
@@ -19,9 +21,11 @@ router.get("/logout", (req, res) => {
   });
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", upload.array(), (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  console.log(req.body.username);
+  console.log(req.body.password);
   let sql = "SELECT id,password FROM user WHERE username = ?";
   const post = [username];
   mysql.query(sql, post, (err, results, fields) => {

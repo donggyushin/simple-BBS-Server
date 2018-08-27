@@ -9,9 +9,10 @@ const app = express();
 const sessionStore = new MySQLStore(session_store_opts);
 
 let port = 8080;
-
+//app.use(bodyParser());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ type: "application/*+json" }));
+
 app.use(
   session({
     key: "sadkljsdaklj!",
@@ -22,6 +23,8 @@ app.use(
   })
 );
 app.use("/api", api);
+//SERVE STATIC FILES = REACT PROJECT
+app.use("/", express.static(__dirname + "/../../client/build"));
 
 app.get("/test", (req, res) => {
   const session = req.session.test;
