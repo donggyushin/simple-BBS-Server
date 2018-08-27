@@ -24,7 +24,7 @@ router.get("/", function (req, res) {
       error: "unauthorized"
     });
   }
-  var sql = "select b.id, b.title, b.content, u.username FROM board b INNER JOIN user u ON b.writer = u.id LIMIT 100";
+  var sql = "select b.id, b.title, b.content, u.username, u.profile_image FROM board b INNER JOIN user u ON b.writer = u.id LIMIT 100";
 
   _mysql2.default.query(sql, function (err, results, fields) {
     if (err) {

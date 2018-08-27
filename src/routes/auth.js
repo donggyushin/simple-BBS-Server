@@ -24,8 +24,7 @@ router.get("/logout", (req, res) => {
 router.post("/login", upload.array(), (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  console.log(req.body.username);
-  console.log(req.body.password);
+
   let sql = "SELECT id,password FROM user WHERE username = ?";
   const post = [username];
   mysql.query(sql, post, (err, results, fields) => {
@@ -37,6 +36,14 @@ router.post("/login", upload.array(), (req, res) => {
         status: 400
       });
     } else {
+      if (results.length === 0) {
+        return res.json({
+          ok: false,
+          error: "no id",
+          status: 400
+        });
+      }
+
       const user_password = results[0].password;
       const user_id = results[0].id;
       if (password === user_password) {
