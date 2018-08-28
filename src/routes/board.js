@@ -12,7 +12,7 @@ router.get("/:id", (req, res) => {
   }
   const bbsId = req.params.id;
   const sql =
-    "SELECT b.id, b.title, b.content, u.username FROM board b INNER JOIN user u ON b.writer = u.id WHERE b.id = ?";
+    "SELECT b.id, b.title, b.content, u.username, u.profile_image FROM board b INNER JOIN user u ON b.writer = u.id WHERE b.id = ?";
   const post = [bbsId];
   mysql.query(sql, post, (err, results, fields) => {
     if (err) {
@@ -39,8 +39,10 @@ router.get("/:id", (req, res) => {
 
       const comments = results;
       return res.json({
-        board,
-        comments
+        boardDetails: {
+          board,
+          comments
+        }
       });
     });
   });

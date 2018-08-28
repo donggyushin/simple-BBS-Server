@@ -39,10 +39,22 @@ router.post("/:id", function (req, res) {
         error: "db error"
       });
     }
-    return res.json({
-      ok: true,
-      status: 200,
-      error: null
+    var sql = "SELECT u.username, c.message FROM comment c INNER JOIN user u ON c.writer = u.id WHERE board =?";
+    var post = [bbsId];
+    _mysql2.default.query(sql, post, function (err, results, fields) {
+      if (err) {
+        console.log(err);
+        return res.json({
+          ok: false,
+          status: 400,
+          error: "can't select datas"
+        });
+      } else {
+        var comments = results;
+        return res.json({
+          comments: comments
+        });
+      }
     });
   });
 });

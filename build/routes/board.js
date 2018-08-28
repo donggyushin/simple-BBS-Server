@@ -25,7 +25,7 @@ router.get("/:id", function (req, res) {
     });
   }
   var bbsId = req.params.id;
-  var sql = "SELECT b.id, b.title, b.content, u.username FROM board b INNER JOIN user u ON b.writer = u.id WHERE b.id = ?";
+  var sql = "SELECT b.id, b.title, b.content, u.username, u.profile_image FROM board b INNER JOIN user u ON b.writer = u.id WHERE b.id = ?";
   var post = [bbsId];
   _mysql2.default.query(sql, post, function (err, results, fields) {
     if (err) {
@@ -51,8 +51,10 @@ router.get("/:id", function (req, res) {
 
       var comments = results;
       return res.json({
-        board: board,
-        comments: comments
+        boardDetails: {
+          board: board,
+          comments: comments
+        }
       });
     });
   });
