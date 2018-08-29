@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
       error: "unauthorized"
     });
   }
-  const sql = `select b.id, b.title, b.content, u.username, u.profile_image FROM board b INNER JOIN user u ON b.writer = u.id LIMIT 100`;
+  const sql = `select b.id, b.title, b.content, u.username, u.profile_image, u.id as userId FROM board b INNER JOIN user u ON b.writer = u.id ORDER BY id DESC LIMIT 100`;
 
   mysql.query(sql, (err, results, fields) => {
     if (err) {

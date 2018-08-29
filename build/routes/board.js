@@ -61,12 +61,14 @@ router.get("/:id", function (req, res) {
 });
 
 router.post("/", async function (req, res) {
-  var username = req.session.token;
+  var userId = req.session.token;
   var title = req.body.title;
   var content = req.body.content;
-  var sql = "SELECT id FROM user WHERE username = ?";
-  var post = [username];
-  await _mysql2.default.query(sql, post, function (err, results, fields) {
+
+  var sql = "INSERT INTO board(title, content, writer) VALUES(?,?,?)";
+  var post = [title, content, userId];
+
+  _mysql2.default.query(sql, post, function (err, results, fields) {
     if (err) {
       console.log(err);
       return res.json({
@@ -75,27 +77,48 @@ router.post("/", async function (req, res) {
         error: "db error"
       });
     } else {
-      var user_id = results[0].id;
-      var _sql = "INSERT INTO board(title, content, writer) VALUES (?,?,?)";
-      var _post = [title, content, user_id];
-      _mysql2.default.query(_sql, _post, function (err, results, fields) {
-        if (err) {
-          console.log(err);
-          return res.json({
-            ok: false,
-            status: 400,
-            error: "fail to write"
-          });
-        } else {
-          return res.json({
-            ok: false,
-            status: 200,
-            error: null
-          });
-        }
+      return res.json({
+        ok: true,
+        status: 200,
+        error: null
       });
     }
   });
+  // const username = req.session.token;
+  // const title = req.body.title;
+  // const content = req.body.content;
+  // let sql = "SELECT id FROM user WHERE username = ?";
+  // const post = [username];
+  // await mysql.query(sql, post, (err, results, fields) => {
+  //   if (err) {
+  //     console.log(err);
+  //     return res.json({
+  //       ok: false,
+  //       status: 400,
+  //       error: "db error"
+  //     });
+  //   } else {
+  //     const user_id = results[0].id;
+  //     let sql = "INSERT INTO board(title, content, writer) VALUES (?,?,?)";
+  //     const post = [title, content, user_id];
+  //     mysql.query(sql, post, (err, results, fields) => {
+  //       if (err) {
+  //         console.log(err);
+  //         return res.json({
+  //           ok: false,
+  //           status: 400,
+  //           error: "fail to write"
+  //         });
+  //       } else {
+  //         return res.json({
+  //           ok: false,
+  //           status: 200,
+  //           error: null
+  //         });
+  //       }
+  //     });
+  //   }
+  // });
 });
 
 exports.default = router;

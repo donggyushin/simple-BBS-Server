@@ -43,6 +43,7 @@ app.use((0, _expressSession2.default)({
 app.use("/api", _api2.default);
 //SERVE STATIC FILES = REACT PROJECT
 app.use("/", _express2.default.static(__dirname + "/../../client/build"));
+app.use("/media", _express2.default.static(__dirname + "/media"));
 
 app.get("/test", function (req, res) {
   var session = req.session.test;

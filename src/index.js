@@ -25,6 +25,7 @@ app.use(
 app.use("/api", api);
 //SERVE STATIC FILES = REACT PROJECT
 app.use("/", express.static(__dirname + "/../../client/build"));
+app.use("/media", express.static(__dirname + "/media"));
 
 app.get("/test", (req, res) => {
   const session = req.session.test;
